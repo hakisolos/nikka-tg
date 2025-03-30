@@ -17,7 +17,7 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "keywords": ["telegram", "bot", "telegraf", "modular", "command-handler"],
-  "author": "Your Name",
+  "keywords": ["telegram", "bot", "telegraf", "haki", "xer"],
+  "author": "Haki",
   "license": "MIT"
 }
