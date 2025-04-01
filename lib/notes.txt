@@ -1,0 +1,58 @@
+const MAX_FILE_SIZE_MB = 200;
+
+// Function to upload media to Catbox
+async function uploadMedia(filePath) {
+  try {
+    const bodyForm = new FormData();
+    bodyForm.append("fileToUpload", fs.createReadStream(filePath));
+    bodyForm.append("reqtype", "fileupload");
+
+    const res = await axios.post("https://catbox.moe/user/api.php", bodyForm, {
+      headers: bodyForm.getHeaders(),
+    });
+
+    return res.data;
+  } catch (error) {
+    console.error("Error during media upload:", error);
+    throw new Error("Failed to upload media.");
+  }
+}
+
+// Command to upload replied media
+bot.command("upload", async (ctx) => {
+  try {
+    const message = ctx.message.reply_to_message;
+
+    if (!message || (!message.photo && !message.video && !message.document)) {
+      return ctx.reply("❌ Please reply to an image, video, or document.");
+    }
+
+    let fileId;
+    if (message.photo) {
+      fileId = message.photo[message.photo.length - 1].file_id;
+    } else if (message.video) {
+      fileId = message.video.file_id;
+    } else if (message.document) {
+      fileId = message.document.file_id;
+    }
+
+    const file = await ctx.telegram.getFile(fileId);
+    const fileUrl = `https://api.telegram.org/file/bot${bot.token}/${file.file_path}`;
+    const filePath = path.join(__dirname, "temp", path.basename(file.file_path));
+
+    // Download file
+    const response = await axios({ url: fileUrl, responseType: "arraybuffer" });
+    fs.writeFileSync(filePath, response.data);
+
+    // Upload to Catbox
+    const mediaUrl = await uploadMedia(filePath);
+
+    // Delete the temp file
+    fs.unlinkSync(filePath);
+
+    return ctx.reply(`✅ Uploaded successfully: ${mediaUrl}`);
+  } catch (error) {
+    console.error("Error in upload command:", error);
+    ctx.reply("❌ Failed to upload media.");
+  }
+});

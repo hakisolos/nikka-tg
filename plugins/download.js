@@ -2,8 +2,6 @@ const ytSearch = require("yt-search");
 const axios = require("axios");
 const {command} = require("../lib/plugins");
 
-
-
 command(
   {
     pattern: "tiktok",

@@ -1,5 +1,6 @@
 module.exports = {
-    BOT_TOKEN: "7986481267:AAHGdQwOlyPZlusI9Up61AjZIFSU1mcy9uQ",
+    BOT_TOKEN: "7744714417:AAEsLFjSIUsPmoUFkcefJW48FrxLrY6cQJU",
     PREFIX: "?",
-    owner: "H4KI"
+    owner: "H4KI",
+    API_URL: "https://nikka-api.vercel.app" 
 };
