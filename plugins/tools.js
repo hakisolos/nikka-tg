@@ -3,14 +3,16 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const config = require("../config");
-const { match } = require("assert");
+
+
+//==========================================================================//
 command(
   {
     pattern: "url",
     desc: "uploads media",
     type: "tools",
   },
-  async (message) => {
+  async (message) => { 
     const msg = message.ctx.message.reply_to_message;
     if (!msg || (!msg.photo && !msg.video && !msg.document && !msg.voice && !msg.audio)) {
       return message.ctx.reply("❌ Please reply to an image, video, or document.");
@@ -54,19 +56,18 @@ command(
         desc: "Translator",
         type: "tools",
     },
-    async (message, match) => {
-        // Check if the message has a reply and the reply has text
+    async (message) => {
+        
         if (!message.ctx.reply_to_message || !message.ctx.reply_to_message.text) {
             return message.reply("Please reply to a message with the text you want to translate.");
         }
-        
         const query = message.ctx.reply_to_message.text;
         try {
             const translation = await trt(query);
             return message.reply(translation);
         } catch (e) {
-            console.log(e); // Log error for debugging
+            console.log(e); 
             return message.reply("An error occurred while translating.");
-        }
+      }
     }
 );
